@@ -1,6 +1,7 @@
 package concurrent_skiplist;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class skiplist
 {
@@ -8,7 +9,7 @@ public final class skiplist
 	final node head = new node(Integer.MIN_VALUE, maxheight);
 	final node tail = new node(Integer.MAX_VALUE, maxheight);
 	private int max_occupied_height;
-	private Lock height_lock;
+	private Lock height_lock = new ReentrantLock();
 
 	//Constructor
 	public skiplist()
@@ -95,8 +96,16 @@ public final class skiplist
 	{
 		//highestlevel: highest level until which the node is inserted
 		int highestlevel = randomheight();
-		node[] preds = new node[maxheight+1];
-		node[] succs = new node[maxheight+1];
+		// Increasing maximum occupied height
+		if(highestlevel > max_occupied_height)
+		{
+			height_lock.lock();
+			max_occupied_height = highestlevel;
+			height_lock.unlock();
+		}
+		
+		node[] preds = new node[max_occupied_height+1];
+		node[] succs = new node[max_occupied_height+1];
 		while(true)
 		{
 			int level = find(data,preds,succs);
@@ -149,14 +158,6 @@ public final class skiplist
 					newnode.next[i] = succs[i];
 				}
 				
-				// Increasing maximum occupied height
-				if(highestlevel > max_occupied_height)
-				{
-					height_lock.lock();
-					max_occupied_height = highestlevel;
-					height_lock.unlock();
-				}
-				
 				//Node is fully linked at all levels
 				newnode.fulllink = true;
 				return true;
@@ -177,8 +178,8 @@ public final class skiplist
 		node deletenode = null;
 		int highestlevel = -1;
 		boolean marked = false;
-		node[] preds = new node[maxheight+1];
-		node[] succs = new node[maxheight+1];
+		node[] preds = new node[max_occupied_height+1];
+		node[] succs = new node[max_occupied_height+1];
 		while(true)
 		{
 			int level = find(data,preds,succs);
