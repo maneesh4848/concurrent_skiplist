@@ -37,7 +37,7 @@ public final class skiplist
 	{
 		int found = -1;
 		node prednode = head;
-		for(int i = maxheight; i >= 0; i--)
+		for(int i = max_occupied_height; i >= 0; i--)
 		{
 			node currnode = prednode.next[i];
 			while(currnode.data < data)
@@ -76,7 +76,7 @@ public final class skiplist
 
 	public void print()
 	{
-		for(int level = maxheight; level >= 0; level--)
+		for(int level = max_occupied_height; level >= 0; level--)
 		{
 			node curr = head.next[level];
 			while(curr != tail)
@@ -148,6 +148,15 @@ public final class skiplist
 					preds[i].next[i] = newnode;
 					newnode.next[i] = succs[i];
 				}
+				
+				// Increasing maximum occupied height
+				if(highestlevel > max_occupied_height)
+				{
+					height_lock.lock();
+					max_occupied_height = highestlevel;
+					height_lock.unlock();
+				}
+				
 				//Node is fully linked at all levels
 				newnode.fulllink = true;
 				return true;
@@ -221,7 +230,20 @@ public final class skiplist
 						continue;
 					}
 					
-					//Deleting the node
+					//Checking and adjusting maximum occupied height
+					if(preds[highestlevel].data == Integer.MIN_VALUE && deletenode.next[highestlevel].data == Integer.MAX_VALUE)
+					{
+						height_lock.lock();
+						while(preds[highestlevel].data == Integer.MIN_VALUE && deletenode.next[highestlevel].data == Integer.MAX_VALUE && highestlevel >= 0)
+						{
+							preds[highestlevel].next[highestlevel] = deletenode.next[highestlevel];
+							highestlevel--;
+							max_occupied_height--;
+						}
+						height_lock.unlock();
+					}
+					
+					//Deleting the node completely
 					for(int i = highestlevel; i >= 0; i--)
 					{
 						preds[i].next[i] = deletenode.next[i];
