@@ -232,7 +232,7 @@ public final class skiplist
 					}
 					
 					//Checking and adjusting maximum occupied height
-					if(preds[highestlevel].data == Integer.MIN_VALUE && deletenode.next[highestlevel].data == Integer.MAX_VALUE)
+					if(preds[highestlevel].data == Integer.MIN_VALUE && deletenode.next[highestlevel].data == Integer.MAX_VALUE && highestlevel == max_occupied_height)
 					{
 						height_lock.lock();
 						while(preds[highestlevel].data == Integer.MIN_VALUE && deletenode.next[highestlevel].data == Integer.MAX_VALUE && highestlevel >= 0)
