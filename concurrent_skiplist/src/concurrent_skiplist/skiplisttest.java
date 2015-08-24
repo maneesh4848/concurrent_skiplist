@@ -18,8 +18,8 @@ public class skiplisttest extends TestCase
 {
 	//Thread support
 	private final static int THREADS = 4;
-	//private final static int TEST_SIZE = 128;
-	//private final static int PER_THREAD = TEST_SIZE / THREADS;
+	private final static int TEST_SIZE = 128;
+	private final static int PER_THREAD = TEST_SIZE / THREADS;
 	
 	//skip list
 	skiplist instance;
@@ -48,136 +48,136 @@ public class skiplisttest extends TestCase
 	private int testtype;
 
 	//Constructor
-	public skiplisttest(int testtype, int sizetype) throws IOException
-	{
-		numseconds = 0;
-		instance = new skiplist();
-		printbit = false;
-		done = false;
-		Random rand = new Random();
-		
-		int range = test_size[sizetype];
-		this.testtype = testtype;
-		addset = new ArrayList<>((range/100)*percent[testtype][0]);
-		removeset = new ArrayList<>((range/100)*percent[testtype][1]);
-		containsset = new ArrayList<>((range/100)*percent[testtype][2]);
-		
-		int addrange = (range/100)*percent[testtype][0];
-		int removerange = (range/100)*percent[testtype][1];
-		int containsrange = (range/100)*percent[testtype][2];
-		
-		if(sizetype == 0)
+		public skiplisttest(int testtype, int sizetype) throws IOException
 		{
-			while(addset.size() < addrange)
+			numseconds = 0;
+			instance = new skiplist();
+			printbit = false;
+			done = false;
+			Random rand = new Random();
+			
+			int range = test_size[sizetype];
+			this.testtype = testtype;
+			addset = new ArrayList<>((range/100)*percent[testtype][0]);
+			removeset = new ArrayList<>((range/100)*percent[testtype][1]);
+			containsset = new ArrayList<>((range/100)*percent[testtype][2]);
+			
+			int addrange = (range/100)*percent[testtype][0];
+			int removerange = (range/100)*percent[testtype][1];
+			int containsrange = (range/100)*percent[testtype][2];
+			
+			if(sizetype == 0)
 			{
-				int temp = rand.nextInt(2*range) - range;
-				if(!addset.contains(temp))
+				while(addset.size() < addrange)
 				{
-					addset.add(temp);
+					int temp = rand.nextInt(2*range) - range;
+					if(!addset.contains(temp))
+					{
+						addset.add(temp);
+					}
+				}
+				while(removeset.size() < removerange)
+				{
+					int temp = rand.nextInt(2*range) - range;
+					if(!removeset.contains(temp))
+					{
+						removeset.add(temp);
+					}
+				}
+				while(containsset.size() < containsrange)
+				{
+					int temp = rand.nextInt(2*range) - range;
+					if(!containsset.contains(temp))
+					{
+						containsset.add(temp);
+					}
 				}
 			}
-			while(removeset.size() < removerange)
+			else if(sizetype == 1)
 			{
-				int temp = rand.nextInt(2*range) - range;
-				if(!removeset.contains(temp))
+				String addname = Integer.toString(testtype+1) + "a.txt";
+				String containsname = Integer.toString(testtype+1) + "c.txt";
+				String removename = Integer.toString(testtype+1) + "r.txt";
+				System.out.println(addname + containsname + removename);
+				FileReader fradd = null;
+				try
 				{
-					removeset.add(temp);
+					fradd = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + addname);
 				}
-			}
-			while(containsset.size() < containsrange)
-			{
-				int temp = rand.nextInt(2*range) - range;
-				if(!containsset.contains(temp))
+				catch (FileNotFoundException e)
 				{
-					containsset.add(temp);
 				}
+				FileReader frcontains = null;
+				try
+				{
+					frcontains = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + containsname);
+				}
+				catch (FileNotFoundException e)
+				{
+				}
+				FileReader frremove = null;
+				try
+				{
+					frremove = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + removename);
+				}
+				catch (FileNotFoundException e)
+				{
+				}
+				
+				BufferedReader buf = new BufferedReader(fradd);
+				String line = null;
+				while((line = buf.readLine()) != null)
+				{
+					String[] temp = line.split(", ");
+					for(String val: temp)
+					{
+						addset.add(Integer.parseInt(val));
+					}
+					
+				}
+				
+				BufferedReader buf2 = new BufferedReader(frremove);
+				while((line = buf2.readLine()) != null)
+				{
+					String[] temp = line.split(", ");
+					for(String val: temp)
+					{
+						removeset.add(Integer.parseInt(val));
+					}
+					
+				}
+				
+				BufferedReader buf3 = new BufferedReader(frcontains);
+				while((line = buf3.readLine()) != null)
+				{
+					String[] temp = line.split(", ");
+					for(String val: temp)
+					{
+						containsset.add(Integer.parseInt(val));
+					}
+					
+				}
+				
+				fradd.close();
+				frcontains.close();
+				frremove.close();
 			}
-		}
-		else if(sizetype == 1)
-		{
-			String addname = Integer.toString(testtype+1) + "a.txt";
-			String containsname = Integer.toString(testtype+1) + "c.txt";
-			String removename = Integer.toString(testtype+1) + "r.txt";
-			System.out.println(addname + containsname + removename);
-			FileReader fradd = null;
+			System.out.println("test cases done");
 			try
 			{
-				fradd = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + addname);
+				outfile = new PrintWriter("output.txt","UTF-8");
 			}
 			catch (FileNotFoundException e)
 			{
 			}
-			FileReader frcontains = null;
-			try
-			{
-				frcontains = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + containsname);
-			}
-			catch (FileNotFoundException e)
+			catch (UnsupportedEncodingException e)
 			{
 			}
-			FileReader frremove = null;
-			try
-			{
-				frremove = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + removename);
-			}
-			catch (FileNotFoundException e)
-			{
-			}
-			
-			BufferedReader buf = new BufferedReader(fradd);
-			String line = null;
-			while((line = buf.readLine()) != null)
-			{
-				String[] temp = line.split(", ");
-				for(String val: temp)
-				{
-					addset.add(Integer.parseInt(val));
-				}
-				
-			}
-			
-			BufferedReader buf2 = new BufferedReader(frremove);
-			while((line = buf2.readLine()) != null)
-			{
-				String[] temp = line.split(", ");
-				for(String val: temp)
-				{
-					removeset.add(Integer.parseInt(val));
-				}
-				
-			}
-			
-			BufferedReader buf3 = new BufferedReader(frcontains);
-			while((line = buf3.readLine()) != null)
-			{
-				String[] temp = line.split(", ");
-				for(String val: temp)
-				{
-					containsset.add(Integer.parseInt(val));
-				}
-				
-			}
-			
-			fradd.close();
-			frcontains.close();
-			frremove.close();
+			starttimer();
 		}
-		System.out.println("test cases done");
-		try
-		{
-			outfile = new PrintWriter("output.txt","UTF-8");
-		}
-		catch (FileNotFoundException e)
-		{
-		}
-		catch (UnsupportedEncodingException e)
-		{
-		}
-		starttimer();
-	}
 	
 	//Sequential calls
-	/*public void testSequential()
+	public void testSequential()
 	{
 		System.out.println("sequential add, contains, and remove");
 		System.out.println();
@@ -303,7 +303,7 @@ public class skiplisttest extends TestCase
 		System.out.println();
 		System.out.println();
 
-	}*/
+	}
 
 	//Parallel adds, removes
 	public long testParallelBoth()  throws Exception
@@ -345,7 +345,7 @@ public class skiplisttest extends TestCase
 		return System.nanoTime()-starttime;
 	}
 	
-	/*class AddThread extends Thread
+	class AddThread extends Thread
 	{
 		int value;
 		public String threadstat;
@@ -413,7 +413,7 @@ public class skiplisttest extends TestCase
 				threadvalue = -1;
 			}
 		}
-	}*/
+	}
 
 	class mythread extends Thread
 	{
@@ -576,13 +576,13 @@ public class skiplisttest extends TestCase
 					printstatus();
 					System.out.println();
 				}
-				numseconds += 10;
+				numseconds += 5;
 				/*if(numseconds % 250 == 0)
 				{
 					instance.print();
 				}*/
 			}
 		};
-		timer.scheduleAtFixedRate(newtask, new Date(), 10);
+		timer.scheduleAtFixedRate(newtask, new Date(), 5);
 	}
 }
