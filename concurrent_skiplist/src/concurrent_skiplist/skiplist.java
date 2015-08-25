@@ -7,8 +7,6 @@ public final class skiplist
 	private static final int maxheight = 25;
 	final node head = new node(Integer.MIN_VALUE, maxheight);
 	final node tail = new node(Integer.MAX_VALUE, maxheight);
-	private int max_occupied_height;
-	private Lock height_lock;
 
 	//Constructor
 	public skiplist()
@@ -17,9 +15,6 @@ public final class skiplist
 		{
 			head.next[i] = tail;
 		}
-		height_lock.lock();
-		max_occupied_height = 0;
-		height_lock.unlock();
 	}
 
 	private int randomheight()
