@@ -79,18 +79,18 @@ public class skiplisttest extends TestCase
 				while(removeset.size() < removerange)
 				{
 					int temp = rand.nextInt(2*range) - range;
-					if(!removeset.contains(temp))
-					{
+					//if(!removeset.contains(temp))
+					//{
 						removeset.add(temp);
-					}
+					//}
 				}
 				while(containsset.size() < containsrange)
 				{
 					int temp = rand.nextInt(2*range) - range;
-					if(!containsset.contains(temp))
-					{
+					//if(!containsset.contains(temp))
+					//{
 						containsset.add(temp);
-					}
+					//}
 				}
 			}
 			else if(sizetype == 1)
