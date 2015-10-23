@@ -21,7 +21,7 @@ public final class skiplist
 	{
 		Random rand = new Random();
 		int height = 0;
-		while(rand.nextInt(2) == 1)
+		while(rand.nextInt(2) == 1 && height < maxheight)
 		{
 			height++;
 		}
