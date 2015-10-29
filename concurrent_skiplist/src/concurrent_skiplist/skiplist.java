@@ -177,11 +177,11 @@ public final class skiplist
 		node deletenode = null;
 		int highestlevel = -1;
 		boolean marked = false;
-		node[] preds = new node[maxheight+1];
-		node[] succs = new node[maxheight+1];
+		node[] preds = new node[max_occupied_height+1];
+		node[] succs = new node[max_occupied_height+1];
 		while(true)
 		{
-			int level = find(data,preds,succs,maxheight);
+			int level = find(data,preds,succs,max_occupied_height);
 			if(level >= 0)
 			{
 				//deletenode is the highest node 
@@ -228,6 +228,19 @@ public final class skiplist
 					if(!valid)
 					{
 						continue;
+					}
+					
+					//Checking and adjusting maximum occupied height
+					if(preds[highestlevel].data == Integer.MIN_VALUE && deletenode.next[highestlevel].data == Integer.MAX_VALUE && highestlevel == max_occupied_height)
+					{
+						height_lock.lock();
+						while(preds[highestlevel].data == Integer.MIN_VALUE && deletenode.next[highestlevel].data == Integer.MAX_VALUE && highestlevel >= 0)
+						{
+							preds[highestlevel].next[highestlevel] = deletenode.next[highestlevel];
+							highestlevel--;
+							max_occupied_height--;
+						}
+						height_lock.unlock();
 					}
 					
 					//Deleting the node
