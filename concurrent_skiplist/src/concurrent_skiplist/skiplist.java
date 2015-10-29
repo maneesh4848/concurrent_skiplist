@@ -62,9 +62,9 @@ public final class skiplist
 
 	public boolean contains(int data)
 	{
-		node[] preds = new node[maxheight+1];
-		node[] succs = new node[maxheight+1];
-		int level = find(data,preds,succs,maxheight);
+		node[] preds = new node[max_occupied_height+1];
+		node[] succs = new node[max_occupied_height+1];
+		int level = find(data,preds,succs,max_occupied_height);
 		
 		//Checking if the node is present and inserted
 		//and not marked for deletion
@@ -77,7 +77,7 @@ public final class skiplist
 
 	public void print()
 	{
-		for(int level = maxheight; level >= 0; level--)
+		for(int level = max_occupied_height; level >= 0; level--)
 		{
 			node curr = head.next[level];
 			while(curr != tail)
@@ -96,11 +96,11 @@ public final class skiplist
 	{
 		//highestlevel: highest level until which the node is inserted
 		int highestlevel = randomheight();
-		node[] preds = new node[maxheight+1];
-		node[] succs = new node[maxheight+1];
+		node[] preds = new node[(max_occupied_height>highestlevel?max_occupied_height:highestlevel)+1];
+		node[] succs = new node[(max_occupied_height>highestlevel?max_occupied_height:highestlevel)+1];
 		while(true)
 		{
-			int level = find(data,preds,succs,maxheight);
+			int level = find(data,preds,succs,max_occupied_height>highestlevel?max_occupied_height:highestlevel);
 			
 			//level >= 0 -> node is found in skip list already
 			if(level >= 0)
@@ -151,6 +151,14 @@ public final class skiplist
 				}
 				//Node is fully linked at all levels
 				newnode.fulllink = true;
+				
+				// Updating maximum occupied height
+				if(highestlevel > max_occupied_height)
+				{
+					height_lock.lock();
+					max_occupied_height = highestlevel;
+					height_lock.unlock();
+				}
 				return true;
 			}
 			finally
