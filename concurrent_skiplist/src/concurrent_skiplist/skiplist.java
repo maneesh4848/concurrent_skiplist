@@ -1,12 +1,15 @@
 package concurrent_skiplist;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class skiplist
 {
 	private static final int maxheight = 25;
 	final node head = new node(Integer.MIN_VALUE, maxheight);
 	final node tail = new node(Integer.MAX_VALUE, maxheight);
+	private int max_occupied_height;
+	private Lock height_lock = new ReentrantLock();
 
 	//Constructor
 	public skiplist()
@@ -15,6 +18,9 @@ public final class skiplist
 		{
 			head.next[i] = tail;
 		}
+		height_lock.lock();
+		max_occupied_height = 0;
+		height_lock.unlock();
 	}
 
 	private int randomheight()
@@ -28,11 +34,11 @@ public final class skiplist
 		return height;
 	}
 
-	public int find(int data, node[] pred, node[] succ)
+	public int find(int data, node[] pred, node[] succ, int height)
 	{
 		int found = -1;
 		node prednode = head;
-		for(int i = maxheight; i >= 0; i--)
+		for(int i = height; i >= 0; i--)
 		{
 			node currnode = prednode.next[i];
 			while(currnode.data < data)
@@ -58,7 +64,7 @@ public final class skiplist
 	{
 		node[] preds = new node[maxheight+1];
 		node[] succs = new node[maxheight+1];
-		int level = find(data,preds,succs);
+		int level = find(data,preds,succs,maxheight);
 		
 		//Checking if the node is present and inserted
 		//and not marked for deletion
@@ -94,7 +100,7 @@ public final class skiplist
 		node[] succs = new node[maxheight+1];
 		while(true)
 		{
-			int level = find(data,preds,succs);
+			int level = find(data,preds,succs,maxheight);
 			
 			//level >= 0 -> node is found in skip list already
 			if(level >= 0)
@@ -167,7 +173,7 @@ public final class skiplist
 		node[] succs = new node[maxheight+1];
 		while(true)
 		{
-			int level = find(data,preds,succs);
+			int level = find(data,preds,succs,maxheight);
 			if(level >= 0)
 			{
 				//deletenode is the highest node 
