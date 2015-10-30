@@ -28,7 +28,10 @@ public final class skiplist
 		return height;
 	}
 
-	public int find(int data, node[] pred, node[] succ)
+	//process_flag = 0 for contains
+	//process_flag = 1 for insert
+	//process_flag = 2 for delete
+	public int find(int data, node[] pred, node[] succ, int process_flag)
 	{
 		int found = -1;
 		node prednode = head;
@@ -45,6 +48,12 @@ public final class skiplist
 			if(data == currnode.data && found == -1)
 			{
 				found = i;
+				if(process_flag == 0 || process_flag == 1)
+				{
+					pred[i] = prednode;
+					succ[i] = currnode;
+					return found;
+				}
 			}
 			//Recording predecessors and successors
 			pred[i] = prednode;
@@ -58,7 +67,7 @@ public final class skiplist
 	{
 		node[] preds = new node[maxheight+1];
 		node[] succs = new node[maxheight+1];
-		int level = find(data,preds,succs);
+		int level = find(data,preds,succs,0);
 		
 		//Checking if the node is present and inserted
 		//and not marked for deletion
@@ -67,23 +76,6 @@ public final class skiplist
 			return true;
 		}
 		return false;
-	}
-
-	public void print()
-	{
-		for(int level = maxheight; level >= 0; level--)
-		{
-			node curr = head.next[level];
-			while(curr != tail)
-			{
-				if(curr.fulllink && !curr.mark)
-				{
-					System.out.print(Integer.toString(curr.data) + ' ');
-				}
-				curr = curr.next[level];
-			}
-			System.out.println();
-		}
 	}
 	
 	public boolean add(int data)
@@ -94,7 +86,7 @@ public final class skiplist
 		node[] succs = new node[maxheight+1];
 		while(true)
 		{
-			int level = find(data,preds,succs);
+			int level = find(data,preds,succs,1);
 			
 			//level >= 0 -> node is found in skip list already
 			if(level >= 0)
@@ -167,7 +159,7 @@ public final class skiplist
 		node[] succs = new node[maxheight+1];
 		while(true)
 		{
-			int level = find(data,preds,succs);
+			int level = find(data,preds,succs,2);
 			if(level >= 0)
 			{
 				//deletenode is the highest node 
@@ -240,4 +232,21 @@ public final class skiplist
 		}
 	}
 
+	public void print()
+	{
+		for(int level = maxheight; level >= 0; level--)
+		{
+			node curr = head.next[level];
+			while(curr != tail)
+			{
+				if(curr.fulllink && !curr.mark)
+				{
+					System.out.print(Integer.toString(curr.data) + ' ');
+				}
+				curr = curr.next[level];
+			}
+			System.out.println();
+		}
+	}
+	
 }
