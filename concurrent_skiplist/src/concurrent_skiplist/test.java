@@ -6,9 +6,15 @@ public class test
 {
 	public static void main(String[] args)
 	{
-		long [][] small,big;
-		small = new long[6][10];
-		big = new long[6][5];
+		//run_small();
+		run_big();
+		System.exit(0);
+	}
+	
+	public static void run_small()
+	{
+		long [][] small;
+		small = new long[6][3];
 
 		for(int i = 0; i < 5; i++)
 		{
@@ -37,7 +43,6 @@ public class test
 		long avg[] = new long[6];
 		for(int i = 0; i < 5; i++)
 		{
-			//System.out.println(Arrays.asList(small[i]));
 			for(int j = 0; j < 3; j++)
 			{
 				System.out.println(Integer.toString(i) + " " + Integer.toString(j) + " " + Long.toString(small[i][j]));
@@ -46,11 +51,15 @@ public class test
 			avg[i] /= 3;
 			System.out.println(Integer.toString(i) + " " + Long.toString(avg[i]));
 		}
-		//System.out.println(Arrays.asList(avg));
-		
-		/*for(int i = 0; i < 5; i++)
+	}
+	
+	public static void run_big()
+	{
+		long [][] big;
+		big = new long[6][3];
+		for(int i = 0; i < 5; i++)
 		{
-			for(int j = 0; j < 3; j++)
+			for(int j = 0; j < 2; j++)
 			{
 				skiplisttest listtest = null;
 				try
@@ -73,17 +82,13 @@ public class test
 		long avg2[] = new long[6];
 		for(int i = 0; i < 5; i++)
 		{
-			//System.out.println(Arrays.asList(big[i]));
-			for(int j = 0; j < 3; j++)
+			for(int j = 0; j < 2; j++)
 			{
 				System.out.println(Integer.toString(i) + " " + Integer.toString(j) + " " + Long.toString(big[i][j]));
 				avg2[i] += big[i][j];
 			}
-			avg2[i] /= 3;
+			avg2[i] /= 2;
 			System.out.println(Integer.toString(i) + " " + Long.toString(avg2[i]));
-		}*/
-		//System.out.println(Arrays.asList(avg2));
-
-		System.exit(0);
+		}
 	}
 }
