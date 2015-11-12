@@ -102,7 +102,7 @@ public class skiplisttest extends TestCase
 				FileReader fradd = null;
 				try
 				{
-					fradd = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + addname);
+					fradd = new FileReader("F:\\iiit\\btp\\inputs_outputs\\inputs_cases\\" + addname);
 				}
 				catch (FileNotFoundException e)
 				{
@@ -110,7 +110,7 @@ public class skiplisttest extends TestCase
 				FileReader frcontains = null;
 				try
 				{
-					frcontains = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + containsname);
+					frcontains = new FileReader("F:\\iiit\\btp\\inputs_outputs\\inputs_cases\\" + containsname);
 				}
 				catch (FileNotFoundException e)
 				{
@@ -118,7 +118,7 @@ public class skiplisttest extends TestCase
 				FileReader frremove = null;
 				try
 				{
-					frremove = new FileReader("F:\\iiit\\btp1\\inputs_outputs\\inputs_5_cases\\" + removename);
+					frremove = new FileReader("F:\\iiit\\btp\\inputs_outputs\\inputs_cases\\" + removename);
 				}
 				catch (FileNotFoundException e)
 				{
