@@ -73,7 +73,7 @@ public final class skiplist
 	{
 		node[] preds = new node[max_occupied_height+1];
 		node[] succs = new node[max_occupied_height+1];
-		int level = find(data,preds,succs,max_occupied_height,0);
+		int level = find(data,preds,succs,preds.length-1,0);
 		
 		//Checking if the node is present and inserted
 		//and not marked for deletion
@@ -92,7 +92,7 @@ public final class skiplist
 		{
 			node[] preds = new node[(max_occupied_height>highestlevel?max_occupied_height:highestlevel)+1];
 			node[] succs = new node[(max_occupied_height>highestlevel?max_occupied_height:highestlevel)+1];
-			int level = find(data,preds,succs,max_occupied_height>highestlevel?max_occupied_height:highestlevel,1);
+			int level = find(data,preds,succs,preds.length-1,1);
 			
 			//level >= 0 -> node is found in skip list already
 			if(level >= 0)
@@ -173,7 +173,7 @@ public final class skiplist
 		{
 			node[] preds = new node[max_occupied_height+1];
 			node[] succs = new node[max_occupied_height+1];
-			int level = find(data,preds,succs,max_occupied_height,2);
+			int level = find(data,preds,succs,preds.length-1,2);
 			if(level >= 0)
 			{
 				//deletenode is the highest node 
